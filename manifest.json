@@ -1,0 +1,11 @@
+{
+  "name": "De Maths Squadron",
+  "short_name": "Maths Squadron",
+  "description": "Learn Mathematics, Further Mathematics, Physics and Digital Literacy.",
+  "start_url": "/de-maths-squadron/",
+  "scope": "/de-maths-squadron/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1565c0",
+  "icons": []
+}
