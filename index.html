@@ -10,10 +10,4 @@ function renderExam(){const q=examQuestions[examIndex];$('examCounter').textCont
 function examMove(step){examIndex=Math.max(0,Math.min(11,examIndex+step));renderExam()}
 function submitExam(expired){if(examDone)return;if(!expired&&!confirm('Submit your examination now? Unanswered questions will be marked incorrect.'))return;examDone=true;clearInterval(examInterval);const marks=examQuestions.reduce((n,q,i)=>n+(examAnswers[i]===q.answer?1:0),0),s=store();s.exams=s.exams||[];s.exams.unshift({label:examLabel,score:marks,date:new Date().toLocaleDateString()});s.exams=s.exams.slice(0,20);save(s);$('examScore').textContent=(expired?'Time is up. ':'')+'You scored '+marks+' out of 12 ('+Math.round(marks/12*100)+'%).';$('examReview').replaceChildren();examQuestions.forEach((q,i)=>{const d=document.createElement('div');d.className='review';const title=document.createElement('strong');title.textContent=(i+1)+'. '+q.q;const a=document.createElement('p');a.textContent='Your answer: '+(examAnswers[i]===null?'Not answered':q.options[examAnswers[i]])+' · Correct answer: '+q.options[q.answer];const w=document.createElement('p');w.className='muted';w.textContent=q.subject+' / '+q.topic+' — '+q.why;d.append(title,a,w);$('examReview').append(d)});show('examResult')}
 home();if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
-</script><script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('./service-worker.js');
-  });
-}
-</script></body></html>
+</script><script>if ('serviceWorker' in navigator) {window.addEventListener('load', function() {navigator.serviceWorker.register('./service-worker.js');});}</script></body></html>
