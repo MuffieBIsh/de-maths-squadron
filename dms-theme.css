@@ -1,1 +1,41 @@
-
+/* De Maths Squadron — visual refresh */
+:root{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:#15294b;background:#f4f7fc}
+body{background:radial-gradient(circle at 100% 0%,#e5eeff,transparent 38%),#f4f7fc;min-height:100vh}
+header{background:linear-gradient(120deg,#091b3b 0%,#143e79 65%,#225da8 100%);padding:32px 18px 38px;border-radius:0 0 30px 30px;box-shadow:0 10px 30px #112f6429;position:relative;overflow:hidden}
+header:after{content:"✦";position:absolute;right:7%;top:-30px;font-size:150px;color:#ffffff0b;pointer-events:none}
+header h1{font-size:clamp(1.65rem,5vw,2.35rem);letter-spacing:-.035em}
+header h1:first-letter{color:#f9c85b}
+header p{font-size:1rem;letter-spacing:.035em;color:#d7e6ff}
+main{max-width:960px;padding:22px 16px 30px}
+nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:22px}
+button{background:linear-gradient(135deg,#1768d6,#114fae);border-radius:12px;box-shadow:0 3px 9px #1254b01b;transition:transform .16s ease,box-shadow .16s ease,background .16s ease}
+button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 7px 16px #1254b02b}
+button:active:not(:disabled){transform:translateY(0)}
+button.secondary{background:#fff;color:#183963;border:1px solid #dce5f4;box-shadow:0 2px 8px #16365c0b}
+nav button{padding:13px 9px;font-size:.9rem}
+.card{border:1px solid #e7edf6;border-radius:20px;padding:23px;box-shadow:0 7px 26px #18345c0b}
+#home>.card:first-child{background:linear-gradient(110deg,#fff,#f0f6ff);border-left:5px solid #eab74e}
+h2{letter-spacing:-.025em;line-height:1.25}
+.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.grid .card{display:flex;flex-direction:column;align-items:flex-start;min-height:210px;position:relative;overflow:hidden}
+.grid .card:before{content:"";position:absolute;right:-30px;top:-35px;width:105px;height:105px;background:#dceaff66;border-radius:50%}
+.grid .card>div:first-child{background:#eaf2ff;color:#1355ae;border-radius:14px;padding:8px 13px;font-size:1.7rem!important}
+.grid .card h2{margin:15px 0 5px;font-size:1.25rem}
+.grid .card p{margin:0 0 18px}
+.grid .card button{margin-top:auto}
+.tag{background:#eaf2ff;color:#164e99;font-weight:650}
+.muted{color:#60718a}
+.example{background:#f1f6ff;border-left-color:#e7ad39;border-radius:10px}
+.bar{height:11px;background:#e9eff9}
+.bar>span{background:linear-gradient(90deg,#1d69ce,#55a4f2);border-radius:10px;transition:width .2s}
+.choice{border:1px solid #dbe5f3;background:#f5f8fd;box-shadow:none;padding:15px}
+.choice.selected{background:#e3efff;border-color:#1766d1}
+.choice.correct{background:#d7f3df;border-color:#46a768}
+.choice.wrong{background:#ffe1e1;border-color:#df7777}
+.lesson-row{padding:17px 0}
+.lesson-row strong{font-size:1.02rem}
+input,select{background:#fff;border:1px solid #ccd8e9;outline-offset:2px}
+input:focus,select:focus{outline:2px solid #77aaf4}
+footer{font-size:.84rem;padding:20px}
+@media(max-width:600px){header{padding:26px 16px 31px}main{padding:17px 12px}nav{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:1fr}.grid .card{min-height:185px}.card{padding:19px}.examhead{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){button,.bar>span{transition:none}}
