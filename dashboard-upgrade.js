@@ -76,7 +76,26 @@ $('examHistory').replaceChildren();
 const title = document.createElement('h3');
 title.textContent = '🏆 Recent CBT Results';
 $('examHistory').append(title);
+const percentages = exams.map(e =>
+  Math.round((Number(e.score) || 0) /
+  Math.max(Number(e.total) || 12, 1) * 100)
+);
 
+const average = percentages.length
+  ? Math.round(percentages.reduce((a,b) => a+b, 0) / percentages.length)
+  : 0;
+
+const best = percentages.length ? Math.max(...percentages) : 0;
+
+const report = document.createElement('div');
+report.className = 'example';
+report.innerHTML = `
+  <h3>📊 Performance Report</h3>
+  <p>Exams taken: ${exams.length}</p>
+  <p>Average score: ${average}%</p>
+  <p>Best score: ${best}%</p>
+`;
+$('examHistory').append(report);
 if(!exams.length){
 const empty = document.createElement('p');
 empty.className = 'muted';
