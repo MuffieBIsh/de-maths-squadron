@@ -205,6 +205,8 @@ error.code === "auth/invalid-credential"
 window.logoutDMSStudent = async function () {
 try {
 await signOut(auth);
+localStorage.removeItem("dmsStudentPlan");
+window.home();
 } catch (error) {
 console.error("Logout failed:", error);
 }
