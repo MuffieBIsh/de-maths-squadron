@@ -14,5 +14,53 @@ function openFormulas(){show('formulas')}
 home();if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
 </script>
 <script src="dashboard-upgrade.js?v=2"></script>
-</body>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+  import {
+    getFirestore,
+    doc,
+    setDoc,
+    getDoc,
+    collection,
+    addDoc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAYI5n7vCym2CTTp8GT2aXEfRj-5BYfnoc",
+    authDomain: "de-maths-squadron.firebaseapp.com",
+    projectId: "de-maths-squadron",
+    storageBucket: "de-maths-squadron.firebasestorage.app",
+    messagingSenderId: "733159671600",
+    appId: "1:733159671600:web:21b5a1e43f3fb61dd0aaf5"
+  };
+
+  const firebaseApp = initializeApp(firebaseConfig);
+  const auth = getAuth(firebaseApp);
+  const db = getFirestore(firebaseApp);
+
+  window.deMathsFirebase = {
+    auth,
+    db,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged,
+    doc,
+    setDoc,
+    getDoc,
+    collection,
+    addDoc,
+    serverTimestamp
+  };
+
+  console.log("De Maths Squadron Firebase initialized successfully.");
+</script></body>
 </html>
