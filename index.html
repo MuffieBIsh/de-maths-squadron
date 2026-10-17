@@ -169,15 +169,37 @@ const message = document.getElementById("authMessage");
 message.textContent = "Logging in...";
 
 try {
-  await signInWithEmailAndPassword(auth, email, password);
-  message.textContent = "Login successful!";
-} catch (error) {
+const credential = await signInWithEmailAndPassword(
+auth,
+email,
+password
+);
+
+const studentRef = doc(db, "students", credential.user.uid);
+const studentSnap = await getDoc(studentRef);
+
+if (studentSnap.exists()) {
+  const studentData = studentSnap.data();
+  const plan = studentData.plan || "free";
+
+  localStorage.setItem("dmsStudentPlan", plan);
+
   message.textContent =
-    error.code === "auth/invalid-credential"
-      ? "Incorrect email or password."
-      : "Login failed: " + error.message;
+    plan.toLowerCase() === "premium"
+      ? "Login successful! Welcome, Premium student!"
+      : "Login successful! Welcome, Free student!";
+} else {
+  localStorage.setItem("dmsStudentPlan", "free");
+  message.textContent =
+    "Login successful! Your student profile is being set up.";
 }
 
+} catch (error) {
+message.textContent =
+error.code === "auth/invalid-credential"
+? "Incorrect email or password."
+: "Login failed: " + error.message;
+}
 };
 
 window.logoutDMSStudent = async function () {
