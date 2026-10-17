@@ -96,6 +96,30 @@ report.innerHTML = `
   <p>Best score: ${best}%</p>
 `;
 $('examHistory').append(report);
+const history = document.createElement('div');
+history.className = 'example';
+history.innerHTML = '<h3>📈 Performance History</h3>';
+
+percentages.forEach((pct, i) => {
+  let change = 'First attempt';
+
+  if (i > 0) {
+    const diff = pct - percentages[i - 1];
+    change = diff > 0
+      ? '+' + diff + ' percentage points'
+      : diff < 0
+        ? diff + ' percentage points'
+        : 'No change';
+  }
+
+  const row = document.createElement('p');
+  row.textContent = 'Attempt ' + (i + 1) +
+    ': ' + pct + '% — ' + change;
+
+  history.appendChild(row);
+});
+
+$('examHistory').append(history);
 if(!exams.length){
 const empty = document.createElement('p');
 empty.className = 'muted';
