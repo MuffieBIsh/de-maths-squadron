@@ -18,7 +18,7 @@
     <p class="quote">“Mathematics is more than numbers. It is the art of thinking clearly, discovering patterns, and turning challenges into possibilities.”</p>
     <p class="supporting">Your next breakthrough begins with curiosity. Learn, practise and improve in Mathematics, Further Mathematics, Physics and Digital Literacy.</p>
     <button class="welcome-cta" onclick="document.getElementById('welcomeScreen').classList.add('hidden'); document.getElementById('authScreen').classList.remove('hidden'); window.scrollTo(0,0);">KINDLY LOGIN OR SIGNUP TO HAVE A WONDERFUL EXPERIENCE →</button>
-</section><section id="authScreen" class="hidden">
+  </div></section><section id="authScreen" class="hidden">
   <div class="card">
     <h2>Welcome to De Maths Squadron!</h2>
     <p class="muted">Register or log in to access your learning dashboard.</p>
@@ -341,22 +341,44 @@ onAuthStateChanged(auth, function (user) {
   const welcomeScreen = document.getElementById("welcomeScreen");
   const nav = document.querySelector("main > nav");
 
-  if (welcomeScreen) welcomeScreen.classList.toggle("hidden", !!user);
-  if (authScreen) authScreen.classList.add("hidden");
-  if (nav) nav.classList.toggle("hidden", !user);
+  if (user) {
+    welcomeScreen.classList.add("hidden");
+    authScreen.classList.add("hidden");
+    nav.classList.remove("hidden");
 
-  const appSections = [
-    "home", "subject", "lesson", "quiz", "result", "examSetup",
-    "exam", "examResult", "dashboard", "formulas", "textbooks", "premium"
-  ];
+    const appSections = [
+      "home", "subject", "lesson", "quiz", "result",
+      "examSetup", "exam", "examResult", "dashboard",
+      "formulas", "textbooks", "premium"
+    ];
 
-  appSections.forEach(function (id) {
-    const element = document.getElementById(id);
-    if (element) element.classList.toggle("hidden", !user || id !== "home");
-  });
+    appSections.forEach(function (id) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.classList.toggle("hidden", id !== "home");
+      }
+    });
 
-  if (user && typeof window.home === "function") {
-    window.home();
+    if (typeof window.home === "function") {
+      window.home();
+    }
+  } else {
+    welcomeScreen.classList.remove("hidden");
+    authScreen.classList.add("hidden");
+    nav.classList.add("hidden");
+
+    const appSections = [
+      "home", "subject", "lesson", "quiz", "result",
+      "examSetup", "exam", "examResult", "dashboard",
+      "formulas", "textbooks", "premium"
+    ];
+
+    appSections.forEach(function (id) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.classList.add("hidden");
+      }
+    });
   }
 });
   console.log("De Maths Squadron Firebase initialized successfully.");
