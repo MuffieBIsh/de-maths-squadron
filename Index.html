@@ -1,0 +1,363 @@
+<!doctype html><html lang="en"><head>
+<meta name="theme-color" content="#1565c0"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#142b55"><meta name="description" content="De Maths Squadron: learn Mathematics, Further Mathematics, Physics and Digital Literacy."><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml"><title>De Maths Squadron</title><style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#142b55;background:#f3f6fb}*{box-sizing:border-box}body{margin:0}header{background:linear-gradient(125deg,#102449,#245fbd);color:#fff;padding:22px 18px 26px;border-radius:0 0 24px 24px}header .wrap{max-width:850px;margin:auto}header h1{font-size:1.6rem;margin:0}header p{color:#dce9ff;margin:6px 0 0}main{max-width:850px;margin:auto;padding:16px}nav{display:flex;gap:8px;margin:0 0 15px;flex-wrap:wrap}button{border:0;border-radius:11px;padding:12px 16px;background:#1766d1;color:#fff;font:inherit;font-weight:650;cursor:pointer}button.secondary{background:#e7edf8;color:#142b55}button:disabled{opacity:.65;cursor:default}button:focus-visible{outline:3px solid #ffab27;outline-offset:2px}.card{background:#fff;padding:19px;border-radius:17px;margin-bottom:14px;box-shadow:0 4px 16px #172c4c12}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.grid .card{margin:0}.muted{color:#536680}.tag{display:inline-block;background:#e8f0ff;border-radius:20px;padding:5px 10px;font-size:.84rem}.hidden{display:none!important}.choice{display:block;width:100%;margin:8px 0;text-align:left;background:#eaf0f9;color:#142b55}.choice.selected{outline:2px solid #1766d1;background:#cce0ff}.choice.correct{background:#c9efd7}.choice.wrong{background:#ffd7d7}.example{padding:13px;background:#eff5ff;border-left:4px solid #1766d1;border-radius:6px;margin:14px 0;line-height:1.6}.bar{height:10px;background:#e7edf8;border-radius:10px;overflow:hidden}.bar>span{display:block;height:100%;background:#1a77ce}.lesson-row{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid #e5ebf5;padding:13px 0}.lesson-row:first-child{border:0}h2{margin-top:4px}#feedback{font-weight:750}footer{text-align:center;color:#60718a;padding:18px}label{display:block;margin:10px 0 5px;font-weight:600}select{font:inherit;border:1px solid #a9b7ce;border-radius:9px;padding:11px;width:100%;max-width:380px;background:white;color:#142b55}.examhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:12px 0}.review{border-top:1px solid #e5ebf5;padding:12px 0}.review p{margin:6px 0}input{font:inherit;border:1px solid #a9b7ce;border-radius:9px;padding:11px;width:100%;max-width:380px} .small{font-size:.88rem} @media(max-width:400px){.lesson-row{display:block}.lesson-row button{margin-top:8px;width:100%}}
+</style><link rel="stylesheet" href="./dms-theme.css"></head><body><header><div class="wrap"><h1>✦ De Maths Squadron</h1><p>Learn • Practise • Improve</p></div></header><main><section id="authScreen">
+  <div class="card">
+    <h2>Welcome to De Maths Squadron!</h2>
+    <p class="muted">Register or log in to access your learning dashboard.</p>
+
+    <div id="registerFields">
+      <label for="regName">Full name</label>
+      <input id="regName" type="text" maxlength="60"
+             placeholder="Enter your full name" autocomplete="name">
+
+      <label for="regEmail">Email address</label>
+      <input id="regEmail" type="email"
+             placeholder="Enter your email" autocomplete="email">
+
+      <label for="regPassword">Password</label>
+      <input id="regPassword" type="password" minlength="6"
+             placeholder="At least 6 characters"
+             autocomplete="new-password">
+
+      <p><button onclick="registerDMSStudent()">Create account</button></p>
+    </div>
+
+    <div id="loginFields" class="hidden">
+      <label for="loginEmail">Email address</label>
+      <input id="loginEmail" type="email"
+             placeholder="Enter your email" autocomplete="email">
+
+      <label for="loginPassword">Password</label>
+      <input id="loginPassword" type="password"
+             placeholder="Enter your password"
+             autocomplete="current-password">
+
+      <p><button onclick="loginDMSStudent()">Log in</button></p>
+    </div>
+
+    <p id="authMessage" role="status" aria-live="polite"></p>
+
+    <button class="secondary" id="authToggle"
+            onclick="toggleDMSAuth()">Already registered? Log in</button>
+  </div>
+</section><nav><button class="secondary" onclick="home()">Home</button><button class="secondary" onclick="logoutDMSStudent()">Log out</button><button class="secondary" onclick="dashboard()">My progress</button><button class="secondary" onclick="examSetup()">CBT exam</button><button class="secondary" onclick="openFormulas()">Formula Cheat Sheet</button></nav><section id="home"><div class="card"><h2 id="greeting">Welcome, learner!</h2><p class="muted">Choose a subject, read a lesson and practise with instant explanations.</p><span class="tag" id="summary"></span></div><div class="grid" id="subjects"></div></section><section id="subject" class="hidden"><button class="secondary" onclick="home()">← All subjects</button><div class="card"><p class="tag" id="subTag"></p><h2 id="subTitle"></h2><p class="muted">Choose a lesson to get started.</p><div id="lessonList"></div></div></section><section id="lesson" class="hidden"><button class="secondary" onclick="openSubject(activeSubject)">← Lessons</button><div class="card"><span class="tag" id="lessonTag"></span><h2 id="lessonTitle"></h2><p id="lessonText" style="line-height:1.7"></p><div class="example" id="example"></div><button onclick="startQuiz()">Start practice →</button></div></section><section id="quiz" class="hidden"><button class="secondary" onclick="openLesson(activeLesson)">← Lesson</button><div class="card"><p class="muted" id="counter"></p><div class="bar"><span id="quizBar"></span></div><h2 id="question"></h2><div id="choices"></div><p id="feedback" role="status" aria-live="polite"></p><p id="explanation"></p><button id="check" onclick="checkAnswer()">Check answer</button><button id="next" class="hidden" onclick="nextQuestion()">Next →</button></div></section><section id="result" class="hidden"><div class="card"><h2>Practice complete 🎉</h2><p id="score"></p><p class="muted">Review the explanation after every question to keep improving.</p><button onclick="startQuiz()">Try again</button><button class="secondary" onclick="openSubject(activeSubject)">More lessons</button></div></section><section id="examSetup" class="hidden"><div class="card"><h2>CBT practice examination</h2><p class="muted">Choose a subject or a mixed paper. Up to twelve questions (depending on subject), 12 minutes, one mark per question. Submit anytime; unanswered questions score zero.</p><label for="examSubject">Examination subject</label><select id="examSubject"><option value="all">Mixed: all four subjects</option><option value="0">Mathematics</option><option value="1">Further Mathematics</option><option value="2">Physics</option><option value="3">Digital Literacy</option></select><p><button onclick="beginExam()">Start timed exam →</button></p></div></section><section id="exam" class="hidden"><div class="card"><div class="examhead"><strong id="examCounter"></strong><strong id="timer" role="timer"></strong></div><div class="bar"><span id="examBar"></span></div><h2 id="examQuestion"></h2><div id="examChoices"></div><div class="examhead"><button class="secondary" onclick="examMove(-1)">← Previous</button><button class="secondary" onclick="examMove(1)">Next →</button></div><p><button onclick="submitExam(false)">Submit examination</button></p></div></section><section id="examResult" class="hidden"><div class="card"><h2>CBT result</h2><p id="examScore"></p><div id="examReview"></div><button onclick="examSetup()">Another exam</button><button class="secondary" onclick="dashboard()">My progress</button></div></section><section id="dashboard" class="hidden"><div class="card"><h2>My progress</h2><label for="learner">Learner name (optional)</label><input id="learner" maxlength="40" placeholder="Your first name" autocomplete="off"><label for="level">Class / level</label><select id="level"><option value="">Choose level (optional)</option><option>JSS1</option><option>JSS2</option><option>JSS3</option><option>SS1</option><option>SS2</option><option>SS3</option><option>Exam preparation</option></select><p><button onclick="saveName()">Save profile</button></p><div id="examHistory"></div><p class="small muted">Your name and scores stay in this browser on this device. No account or internet sync is included.</p><div id="progressList"></div><div class="card" id="premiumSection">
+  <h2>⭐ Upgrade to Premium</h2>
+
+  <p>Unlock the full De Maths Squadron learning experience.</p>
+
+  <p>Enjoy unlimited lessons, practice questions,
+  CBT examinations and more.</p>
+
+  <button onclick="showPremiumPlans()">
+    View Premium Plans →
+  </button><button onclick="show('textbooks')">📚 Open Textbook Library</button>
+</div><button class="secondary" onclick="resetProgress()">Clear saved progress</button></div></section><section id="premium" class="hidden">
+
+  <button class="secondary" onclick="home()">
+    ← Back to Home
+  </button>
+
+  <div class="card">
+    <h2>⭐ De Maths Squadron Premium</h2>
+    <p>Choose your learning package.</p>
+
+    <h3>Free Plan</h3>
+    <p>Limited lessons and practice questions.</p>
+    <button class="secondary" disabled>
+      Current Free Plan
+    </button>
+  </div>
+
+  <div class="card">
+    <h3>Premium Monthly</h3>
+    <p>Full access for 30 days.</p>
+    <button onclick="selectPremium('monthly')">
+      Select Monthly
+    </button>
+  </div>
+
+  <div class="card">
+    <h3>Premium Termly</h3>
+    <p>Full access for 3 months.</p>
+    <button onclick="selectPremium('termly')">
+      Select Termly
+    </button>
+  </div>
+
+  <div class="card">
+    <h3>Premium Yearly</h3>
+    <p>Full access for 12 months.</p>
+    <button onclick="selectPremium('yearly')">
+      Select Yearly
+    </button>
+  </div>
+
+</section><section id="textbooks" class="hidden">
+  <button class="secondary" onclick="home()">← Back to Home</button>
+
+  <div class="card">
+    <h2>📚 De Maths Squadron Textbook Library</h2>
+    <p>Discover recommended textbooks, extra exercises and learning resources.</p>
+  </div>
+
+  <div class="card
+    <h3>📘 Mathematics</h3>
+    <p>JSS1–JSS3 and SS1–SS3</p>
+    <p>Explore textbooks, worked examples and additional exercises.</p>
+    <button onclick="alert('Mathematics resources are coming soon!')">
+      Explore Mathematics
+    </button>
+  </div>
+
+  <div class="card">
+    <h3>📐 Further Mathematics</h3>
+    <p>Algebra, surds, trigonometry, calculus and more.</p>
+    <button onclick="alert('Further Mathematics resources are coming soon!')">
+      Explore Further Mathematics
+    </button>
+  </div>
+
+  <div class="card">
+    <h3>⚛️ Physics</h3>
+    <p>Textbooks, worked problems and revision exercises.</p>
+    <button onclick="alert('Physics resources are coming soon!')">
+      Explore Physics
+    </button>
+  </div>
+
+  <div class="card">
+    <h3>💻 Digital Literacy</h3>
+    <p>Computer studies, digital skills and online safety.</p>
+    <button onclick="alert('Digital Literacy resources are coming soon!')">
+      Explore Digital Literacy
+    </button>
+  </div>
+</section><section id="formulas" class="hidden"><button class="secondary" onclick="home()">← Home</button><div class="card"><h2>📐 Essential Formula Reference</h2><p class="muted">Quick formulas for core subjects.</p><div style="margin-top:14px"><h3>Quadratic Formula</h3><p class="example">x = (-b ± √(b² - 4ac)) / (2a)</p><h3>Pythagorean Theorem</h3><p class="example">a² + b² = c²</p><h3>Newton’s Second Law</h3><p class="example">Force (F) = mass (m) × acceleration (a)</p><h3>Potential Energy</h3><p class="example">PE = m × g × h</p></div></div></section></main><footer>De Maths Squadron • Learning edition • 18 lessons / 48 questions • Timed CBT</footer><script>
+const DATA=[{"name":"Mathematics","icon":"∑","lessons":[{"title":"Linear Equations","text":"An equation stays balanced when you do the same operation to both sides. Isolate the unknown.","example":"3x + 5 = 20 → 3x = 15 → x = 5.","qs":[{"q":"2x + 6 = 16. Find x.","options":["4","5","6","8"],"answer":1,"why":"Subtract 6, then divide 10 by 2."},{"q":"5x = 35. Find x.","options":["5","6","7","8"],"answer":2,"why":"Divide both sides by 5."},{"q":"x − 9 = 4. Find x.","options":["5","11","13","15"],"answer":2,"why":"Add 9 to both sides."}]},{"title":"Fractions","text":"For addition or subtraction, first write fractions using a common denominator.","example":"1/2 + 1/4 = 2/4 + 1/4 = 3/4.","qs":[{"q":"1/3 + 1/3 = ?","options":["1/6","2/3","1/3","2/6"],"answer":1,"why":"Add the numerators while keeping the denominator."},{"q":"3/4 − 1/4 = ?","options":["1/2","2/8","1/4","1"],"answer":0,"why":"2/4 simplifies to 1/2."},{"q":"1/2 + 1/3 = ?","options":["2/5","5/6","1/6","3/6"],"answer":1,"why":"Use sixths: 3/6 + 2/6."}]},{"title":"Binary Numbers","text":"Binary uses only 0 and 1. Each position represents a power of 2.","example":"101₂ = 1×4 + 0×2 + 1×1 = 5₁₀.","qs":[{"q":"10₂ in decimal is:","options":["1","2","3","10"],"answer":1,"why":"The 1 is in the twos column."},{"q":"11₂ + 1₂ = ?","options":["100₂","12₂","101₂","11₂"],"answer":0,"why":"3 + 1 = 4, written 100 in binary."},{"q":"101₂ in decimal is:","options":["4","5","6","7"],"answer":1,"why":"4 + 1 = 5."}]},{"title":"Percentages","text":"A percentage is a fraction expressed out of 100. To convert a fraction to a percentage, multiply by 100%. To find a percentage of a quantity, multiply the quantity by the percentage divided by 100.","example":"Find 20% of 150. Solution: 20/100 × 150 = 30.","qs":[{"q":"Find 25% of 200.","options":["25","40","50","75"],"answer":2,"why":"25/100 × 200 = 50."},{"q":"Express 3/5 as a percentage.","options":["30%","50%","60%","80%"],"answer":2,"why":"3/5 × 100% = 60%."}]},{"title":"Algebraic Expressions","text":"An algebraic expression contains numbers, variables and mathematical operations. Like terms have the same variables raised to the same powers. Simplify expressions by collecting like terms.","example":"Simplify 5x + 3x - 2x. Solution: (5 + 3 - 2)x = 6x.","qs":[{"q":"Simplify 3x + 5x.","options":["8","8x","15x","2x"],"answer":1,"why":"Add the coefficients: 3x + 5x = 8x."},{"q":"Simplify 4a + 3b - a.","options":["3a + 3b","7ab","3a + 2b","4a + 2b"],"answer":0,"why":"Combine the a terms: 4a +3b- a = 3a+3b."}]},{"title":"Indices","text":"Indices are powers or exponents. When multiplying powers with the same base, add the indices. When dividing powers with the same base, subtract the indices. A power raised to another power requires multiplying the indices.","example":"Simplify 2³ × 2². Solution: 2³⁺² = 2⁵ = 32.","qs":[{"q":"Simplify 2³ × 2².","options":["2⁵","2⁶","4⁵","2¹"],"answer":0,"why":"Add the indices: 2³ × 2² = 2⁵."},{"q":"Evaluate 3².","options":["6","9","8","12"],"answer":1,"why":"3² = 3 × 3 = 9."}]},{"title":"Quadratic Equations","text":"A quadratic equation has the form ax² + bx + c = 0, where a is not zero. It can be solved by factorisation, completing the square or the quadratic formula.","example":"Solve x² - 5x + 6 = 0. Factorise: (x - 2)(x - 3) = 0. Therefore, x = 2 or x = 3.","qs":[{"q":"Solve x² - 9 = 0.","options":["x = 9 only","x = 3 only","x = ±3","x = ±9"],"answer":2,"why":"x² = 9, so x = 3 or x = -3."},{"q":"Which is a quadratic equation?","options":["2x + 1 = 0","x² + 3x + 2 = 0","x³ - 1 = 0","5x = 10"],"answer":1,"why":"The highest power of x is 2."}]},{"title":"Geometry","text":"Geometry studies shapes, sizes, angles and positions. The angles in a triangle add up to 180°. The sum of the interior angles of a quadrilateral is 360°.","example":"Find the third angle of a triangle with angles 50° and 60°. Solution: 180° - (50° + 60°) = 70°.","qs":[{"q":"Two angles of a triangle are 60° and 70°. Find the third angle.","options":["40°","50°","60°","70°"],"answer":1,"why":"180° - 60° - 70° = 50°."},{"q":"What is the sum of the interior angles of a quadrilateral?","options":["180°","270°","360°","540°"],"answer":2,"why":"A quadrilateral's interior angles add up to 360°."}]},{"title":"Trigonometry","text":"In a right-angled triangle, sine = opposite/hypotenuse, cosine = adjacent/hypotenuse, and tangent = opposite/adjacent. These ratios help calculate unknown sides and angles.","example":"In a right-angled triangle, the opposite side is 3 cm and the hypotenuse is 5 cm. Therefore, sin θ = 3/5 = 0.6.","qs":[{"q":"What is sin 30°?","options":["0","1/2","√3/2","1"],"answer":1,"why":"The standard value of sin 30° is 1/2."},{"q":"Which ratio equals opposite/adjacent?","options":["Sine","Cosine","Tangent","Cotangent"],"answer":2,"why":"tan θ = opposite/adjacent."}]}]},{"name":"Further Mathematics","icon":"ƒ","lessons":[{"title":"Set Theory","text":"A union combines distinct elements. An intersection contains only common elements.","example":"{1,2,3} ∩ {2,3,4} = {2,3}.","qs":[{"q":"{1,2,3} ∩ {3,4} = ?","options":["{1}","{3}","{1,2,3,4}","∅"],"answer":1,"why":"Only 3 is common."},{"q":"n({a,b,c}) = ?","options":["2","3","4","1"],"answer":1,"why":"There are three distinct elements."},{"q":"{1,2} ∪ {2,4} = ?","options":["{2}","{1,4}","{1,2,4}","∅"],"answer":2,"why":"Include each distinct element once."}]},{"title":"Surds","text":"Simplify a square root by extracting perfect-square factors.","example":"√72 = √(36×2) = 6√2.","qs":[{"q":"√50 = ?","options":["5√2","2√5","10√5","25√2"],"answer":0,"why":"50 = 25×2."},{"q":"√9 + √16 = ?","options":["5","7","12","25"],"answer":1,"why":"3 + 4 = 7."},{"q":"√12 = ?","options":["3√2","2√3","4√3","6"],"answer":1,"why":"12 = 4×3."}]},{"title":"Quadratic Equations","text":"A quadratic equation can often be solved by factoring into two linear factors.","example":"x² − 5x + 6 = (x−2)(x−3), so x = 2 or 3.","qs":[{"q":"Roots of x² − 5x + 6 = 0 are:","options":["1,6","2,3","−2,−3","0,5"],"answer":1,"why":"Factor into (x−2)(x−3)."},{"q":"x² − 9 = ?","options":["(x−9)(x+1)","(x−3)(x+3)","(x−3)²","x(x−9)"],"answer":1,"why":"Use difference of two squares."},{"q":"The degree of x² + 2x + 1 is:","options":["1","2","3","0"],"answer":1,"why":"The highest exponent is 2."}]}]},{"name":"Physics","icon":"⚛","lessons":[{"title":"Speed and Motion","text":"Average speed is total distance divided by total time. Use consistent units.","example":"100 m in 20 s → 100 ÷ 20 = 5 m/s.","qs":[{"q":"60 m in 10 s gives:","options":["6 m/s","10 m/s","50 m/s","600 m/s"],"answer":0,"why":"60 ÷ 10 = 6."},{"q":"SI unit of speed:","options":["m","s","m/s","m/s²"],"answer":2,"why":"Distance divided by time."},{"q":"120 km in 2 h gives:","options":["30 km/h","60 km/h","120 km/h","240 km/h"],"answer":1,"why":"120 ÷ 2 = 60."}]},{"title":"Force and Newton’s Laws","text":"Newton’s second law states that net force equals mass multiplied by acceleration.","example":"For 2 kg at 3 m/s², F = ma = 6 N.","qs":[{"q":"F for 4 kg at 2 m/s² is:","options":["2 N","6 N","8 N","12 N"],"answer":2,"why":"Multiply 4 by 2."},{"q":"SI unit of force:","options":["joule","newton","watt","pascal"],"answer":1,"why":"Force is measured in newtons."},{"q":"If net force is zero, acceleration is:","options":["zero","infinite","always 10","negative"],"answer":0,"why":"From F = ma, a = 0 for nonzero mass."}]},{"title":"Energy","text":"Energy is the capacity to do work. Gravitational potential energy near Earth is mgh.","example":"For m = 2 kg, g = 10 m/s² and h = 3 m: PE = 60 J.","qs":[{"q":"Unit of energy:","options":["watt","newton","joule","metre"],"answer":2,"why":"Energy is measured in joules."},{"q":"PE of 1 kg at 5 m, g=10:","options":["2 J","5 J","50 J","100 J"],"answer":2,"why":"mgh = 1×10×5."},{"q":"Which is kinetic energy?","options":["Energy of motion","Energy of height only","Temperature","Pressure"],"answer":0,"why":"Kinetic energy is associated with motion."}]}]},{"name":"Digital Literacy","icon":"⌘","lessons":[{"title":"Online Safety","text":"Protect personal information, use strong unique passwords, and verify suspicious messages.","example":"An urgent message requesting your password is a warning sign.","qs":[{"q":"Strongest password:","options":["12345678","password","MyName","River!7Cloud#29"],"answer":3,"why":"Long, unpredictable passwords are harder to guess."},{"q":"A stranger asks for a login code. You should:","options":["Share it","Keep it private","Post it online","Forward it"],"answer":1,"why":"Never share login codes."},{"q":"Phishing is:","options":["A fake login message","Saving a document","Charging a phone","Typing notes"],"answer":0,"why":"Phishing attempts to steal information."}]},{"title":"Computer Basics","text":"Hardware refers to physical computer parts. Software refers to programs and instructions.","example":"A keyboard is hardware; a word processor is software.","qs":[{"q":"Which is hardware?","options":["Browser","Keyboard","Operating system","App"],"answer":1,"why":"You can physically touch a keyboard."},{"q":"Which is software?","options":["Mouse","Monitor","Word processor","Printer"],"answer":2,"why":"A word processor is a program."},{"q":"A CPU mainly:","options":["Prints paper","Processes instructions","Displays pictures only","Stores electricity"],"answer":1,"why":"The processor executes instructions."}]},{"title":"Internet Research","text":"Evaluate a source by checking the author, publication date, evidence and corroboration.","example":"Compare an unfamiliar claim with trustworthy independent sources.","qs":[{"q":"Best way to verify a surprising claim:","options":["Share instantly","Check other reliable sources","Trust the headline","Ignore the date"],"answer":1,"why":"Corroborate with independent sources."},{"q":"Which matters when judging a source?","options":["Author and evidence","Font size only","Number of emojis","Background colour"],"answer":0,"why":"Credibility depends on evidence and provenance."},{"q":"A sponsored search result is:","options":["Always neutral","An advertisement","Always false","A password"],"answer":1,"why":"Sponsored results are paid placements."}]}]}];
+const $=id=>document.getElementById(id);let activeSubject=0,activeLesson=0,index=0,selected=null,score=0,locked=false;function store(){try{return JSON.parse(localStorage.getItem('dms-v2')||'{}')}catch{return {}}}function save(s){try{localStorage.setItem('dms-v2',JSON.stringify(s))}catch{}}function show(id){['home','subject','lesson','quiz','result','dashboard','examSetup','exam','examResult','formulas','textbooks' ].forEach(x=>$(x).classList.toggle('hidden',x!==id));window.scrollTo(0,0)}
+function showPremiumPlans(){
+  show('premium');
+}
+
+function home(){const s=store(),scores=s.scores||{};$('greeting').textContent='Welcome'+(s.name?', '+s.name:'')+'!';$('summary').textContent=Object.keys(scores).length+' of '+DATA.reduce((n,x)=>n+x.lessons.length,0)+' lessons practised';$('subjects').innerHTML=DATA.map((x,i)=>'<article class="card"><div style="font-size:2rem" aria-hidden="true">'+x.icon+'</div><h2>'+x.name+'</h2><p class="muted">'+x.lessons.length+' lessons · '+x.lessons.reduce((a,b)=>a+b.qs.length,0)+' practice questions</p><button onclick="openSubject('+i+')">Explore subject →</button></article>').join('');show('home')}function openSubject(i){activeSubject=i;const s=DATA[i],scores=store().scores||{};$('subTag').textContent='Subject '+(i+1)+' of '+DATA.length;$('subTitle').textContent=s.name;$('lessonList').innerHTML=s.lessons.map((l,j)=>{let key=i+'-'+j;return '<div class="lesson-row"><div><strong>'+(j+1)+'. '+l.title+'</strong><br><small class="muted">'+(scores[key]===undefined?'Not attempted':'Best: '+scores[key]+'/'+l.qs.length)+'</small></div><button onclick="openLesson('+j+')">Open lesson</button></div>'}).join('');show('subject')}function openLesson(j){activeLesson=j;const l=DATA[activeSubject].lessons[j];$('lessonTag').textContent=DATA[activeSubject].name+' · Lesson '+(j+1);$('lessonTitle').textContent=l.title;$('lessonText').textContent=l.text;$('example').textContent='Worked example: '+l.example;show('lesson')}function startQuiz(){index=0;score=0;renderQuestion();show('quiz')}function renderQuestion(){selected=null;locked=false;const q=DATA[activeSubject].lessons[activeLesson].qs[index];$('counter').textContent='Question '+(index+1)+' of '+DATA[activeSubject].lessons[activeLesson].qs.length;$('quizBar').style.width=((index+1)/DATA[activeSubject].lessons[activeLesson].qs.length*100)+'%';$('question').textContent=q.q;$('choices').innerHTML=q.options.map((o,i)=>'<button class="choice" id="c'+i+'" onclick="choose('+i+')">'+String.fromCharCode(65+i)+'. '+o+'</button>').join('');$('feedback').textContent='';$('explanation').textContent='';$('check').classList.remove('hidden');$('next').classList.add('hidden')}function choose(i){if(locked)return;selected=i;document.querySelectorAll('.choice').forEach((b,j)=>b.classList.toggle('selected',i===j))}function checkAnswer(){if(locked)return;if(selected===null){$('feedback').textContent='Select an answer first.';return}locked=true;const q=DATA[activeSubject].lessons[activeLesson].qs[index],correct=selected===q.answer;if(correct)score++;$('feedback').textContent=correct?'Correct!':'Not quite. The correct answer is highlighted.';$('explanation').textContent=q.why;document.querySelectorAll('.choice').forEach((b,j)=>{b.disabled=true;b.classList.toggle('correct',j===q.answer);b.classList.toggle('wrong',j===selected&&!correct)});$('check').classList.add('hidden');$('next').textContent=index===DATA[activeSubject].lessons[activeLesson].qs.length-1?'See results →':'Next →';$('next').classList.remove('hidden')}function nextQuestion(){if(!locked)return;if(index<DATA[activeSubject].lessons[activeLesson].qs.length-1){index++;renderQuestion();return}const s=store();s.scores=s.scores||{};const key=activeSubject+'-'+activeLesson;s.scores[key]=Math.max(s.scores[key]||0,score);save(s);$('score').textContent='You scored '+score+' out of '+DATA[activeSubject].lessons[activeLesson].qs.length+' in '+DATA[activeSubject].lessons[activeLesson].title+'. Best score: '+s.scores[key]+'/'+DATA[activeSubject].lessons[activeLesson].qs.length+'.';show('result')}function dashboard(){const s=store();$('learner').value=s.name||'';$('level').value=s.level||'';$('examHistory').innerHTML='<h3>Recent CBT attempts</h3>'+((s.exams||[]).length?(s.exams||[]).slice(0,8).map(e=>'<p>'+e.label+': <strong>'+e.score+'/12</strong> ('+e.date+')</p>').join(''):'<p class=muted>No CBT attempts yet.</p>');const scores=s.scores||{};$('progressList').innerHTML=DATA.map((sub,i)=>'<h3>'+sub.name+'</h3>'+sub.lessons.map((l,j)=>{let v=scores[i+'-'+j];return '<p>'+l.title+': <strong>'+(v===undefined?'Not attempted':v+'/'+l.qs.length)+'</strong></p>'}).join('')).join('');show('dashboard')}function saveName(){const s=store();s.name=$('learner').value.trim().slice(0,40);s.level=$('level').value;save(s);dashboard()}function resetProgress(){if(!confirm('Clear all saved scores and learner name on this device?'))return;localStorage.removeItem('dms-v2');dashboard()}let examQuestions=[],examAnswers=[],examIndex=0,examDeadline=0,examInterval=null,examDone=false,examLabel='';
+function examSetup(){if(examInterval)clearInterval(examInterval);show('examSetup')}
+function beginExam(){const v=$('examSubject').value;let pool=[];DATA.forEach((sub,i)=>{if(v==='all'||Number(v)===i)sub.lessons.forEach(l=>l.qs.forEach(q=>pool.push({...q,subject:sub.name,topic:l.title}))) });for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}examQuestions=pool.slice(0,12);examAnswers=Array(examQuestions.length).fill(null);examIndex=0;examDone=false;examLabel=v==='all'?'Mixed paper':DATA[Number(v)].name;examDeadline=Date.now()+12*60*1000;clearInterval(examInterval);examInterval=setInterval(updateExamClock,250);renderExam();show('exam');updateExamClock()}
+function updateExamClock(){if(examDone)return;const left=Math.max(0,Math.ceil((examDeadline-Date.now())/1000));$('timer').textContent='Time left: '+String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0');if(left===0)submitExam(true)}
+function renderExam(){const q=examQuestions[examIndex];$('examCounter').textContent='Question '+(examIndex+1)+' / '+examQuestions.length+' · Answered '+examAnswers.filter(x=>x!==null).length;$('examBar').style.width=((examIndex+1)/examQuestions.length*100)+'%';$('examQuestion').textContent=q.q;$('examChoices').replaceChildren();q.options.forEach((opt,i)=>{const b=document.createElement('button');b.className='choice'+(examAnswers[examIndex]===i?' selected':'');b.textContent=String.fromCharCode(65+i)+'. '+opt;b.onclick=()=>{examAnswers[examIndex]=i;renderExam()};$('examChoices').append(b)})}
+function examMove(step){examIndex=Math.max(0,Math.min(examQuestions.length-1,examIndex+step));renderExam()}
+function submitExam(expired){if(examDone)return;if(!expired&&!confirm('Submit your examination now? Unanswered questions will be marked incorrect.'))return;examDone=true;clearInterval(examInterval);const marks=examQuestions.reduce((n,q,i)=>n+(examAnswers[i]===q.answer?1:0),0),s=store();s.exams=s.exams||[];s.exams.unshift({label:examLabel,score:marks,total:examQuestions.length,date:new Date().toLocaleDateString()});s.exams=s.exams.slice(0,20);save(s);$('examScore').textContent=(expired?'Time is up. ':'')+'You scored '+marks+' out of '+examQuestions.length+' ('+Math.round(marks/examQuestions.length*100)+'%).';$('examReview').replaceChildren();examQuestions.forEach((q,i)=>{const d=document.createElement('div');d.className='review';const title=document.createElement('strong');title.textContent=(i+1)+'. '+q.q;const a=document.createElement('p');a.textContent='Your answer: '+(examAnswers[i]===null?'Not answered':q.options[examAnswers[i]])+' · Correct answer: '+q.options[q.answer];const w=document.createElement('p');w.className='muted';w.textContent=q.subject+' / '+q.topic+' — '+q.why;d.append(title,a,w);$('examReview').append(d)});show('examResult')}
+function openFormulas(){show('formulas')}
+home();if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+<script src="dashboard-upgrade.js?v=2"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+  import {
+    getFirestore,
+    doc,
+    setDoc,
+    getDoc,
+    collection,
+    addDoc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAYI5n7vCym2CTTp8GT2aXEfRj-5BYfnoc",
+    authDomain: "de-maths-squadron.firebaseapp.com",
+    projectId: "de-maths-squadron",
+    storageBucket: "de-maths-squadron.firebasestorage.app",
+    messagingSenderId: "733159671600",
+    appId: "1:733159671600:web:21b5a1e43f3fb61dd0aaf5"
+  };
+
+  const firebaseApp = initializeApp(firebaseConfig);
+  const auth = getAuth(firebaseApp);
+  const db = getFirestore(firebaseApp);
+
+  window.deMathsFirebase = {
+    auth,
+    db,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged,
+    doc,
+    setDoc,
+    getDoc,
+    collection,
+    addDoc,
+    serverTimestamp
+  };
+
+window.toggleDMSAuth = function () {
+const login = document.getElementById("loginFields");
+const register = document.getElementById("registerFields");
+const toggle = document.getElementById("authToggle");
+const isLogin = login.classList.contains("hidden");
+
+login.classList.toggle("hidden", !isLogin);
+register.classList.toggle("hidden", isLogin);
+
+toggle.textContent = isLogin
+  ? "New here? Create an account"
+  : "Already registered? Log in";
+
+document.getElementById("authMessage").textContent = "";
+
+};
+
+window.registerDMSStudent = async function () {
+const name = document.getElementById("regName").value.trim();
+const email = document.getElementById("regEmail").value.trim();
+const password = document.getElementById("regPassword").value;
+const message = document.getElementById("authMessage");
+
+if (!name || !email || !password) {
+  message.textContent = "Please fill in all fields.";
+  return;
+}
+
+message.textContent = "Creating your account...";
+
+try {
+  const credential = await createUserWithEmailAndPassword(
+    auth, email, password
+  );
+
+  try {
+    await setDoc(doc(db, "students", credential.user.uid), {
+      name: name,
+      email: email,
+      plan: "free",
+      createdAt: serverTimestamp()
+    });
+  } catch (profileError) {
+    console.error("Student profile could not be saved:", profileError);
+  }
+
+  message.textContent = "Account created successfully!";
+} catch (error) {
+  message.textContent =
+    error.code === "auth/email-already-in-use"
+      ? "This email is already registered. Please log in."
+      : error.code === "auth/weak-password"
+      ? "Use a password with at least 6 characters."
+      : error.code === "auth/invalid-email"
+      ? "Please enter a valid email address."
+      : "Registration failed: " + error.message;
+}
+
+};
+
+window.loginDMSStudent = async function () {
+const email = document.getElementById("loginEmail").value.trim();
+const password = document.getElementById("loginPassword").value;
+const message = document.getElementById("authMessage");
+
+message.textContent = "Logging in...";
+
+try {
+const credential = await signInWithEmailAndPassword(
+auth,
+email,
+password
+);
+
+const studentRef = doc(db, "students", credential.user.uid);
+const studentSnap = await getDoc(studentRef);
+
+if (studentSnap.exists()) {
+  const studentData = studentSnap.data();
+  const plan = studentData.plan || "free";
+
+  localStorage.setItem("dmsStudentPlan", plan);
+
+  message.textContent =
+    plan.toLowerCase() === "premium"
+      ? "Login successful! Welcome, Premium student!"
+      : "Login successful! Welcome, Free student!";
+} else {
+  localStorage.setItem("dmsStudentPlan", "free");
+  message.textContent =
+    "Login successful! Your student profile is being set up.";
+}
+
+} catch (error) {
+message.textContent =
+error.code === "auth/invalid-credential"
+? "Incorrect email or password."
+: "Login failed: " + error.message;
+}
+};
+
+window.logoutDMSStudent = async function () {
+try {
+await signOut(auth);
+localStorage.removeItem("dmsStudentPlan");
+window.home();
+} catch (error) {
+console.error("Logout failed:", error);
+}
+};
+
+onAuthStateChanged(auth, function (user) {
+const authScreen = document.getElementById("authScreen");
+const nav = document.querySelector("main > nav");
+
+if (authScreen) {
+  authScreen.classList.toggle("hidden", !!user);
+}
+
+if (nav) {
+  nav.classList.toggle("hidden", !user);
+}
+
+const appSections = [
+  "home", "subject", "lesson", "quiz", "result",
+  "examSetup", "exam", "examResult", "dashboard", "formulas"
+];
+
+appSections.forEach(function (id) {
+  const element = document.getElementById(id);
+
+  if (element) {
+    element.classList.toggle(
+      "hidden",
+      !user || id !== "home"
+    );
+  }
+});
+
+if (user && typeof window.home === "function") {
+  window.home();
+}
+
+});  
+  console.log("De Maths Squadron Firebase initialized successfully.");
+</script><script>
+function showPremiumPlans() {
+  document.querySelectorAll('main > section').forEach(section => {
+    section.classList.add('hidden');
+  });
+
+  document.getElementById('premium').classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+
+function selectPremium(plan) {
+  alert(
+    'You selected the ' + plan +
+    ' subscription. Payment integration is coming soon!'
+  );
+}
+</script></body></body>
+</html>
