@@ -57,7 +57,7 @@
     <button class="secondary" id="authToggle"
             onclick="toggleDMSAuth()">Already registered? Log in</button>
   </div>
-</section><nav><button class="secondary" onclick="home()">Home</button><button class="secondary" onclick="logoutDMSStudent()">Log out</button><button class="secondary" onclick="dashboard()">My progress</button><button class="secondary" onclick="examSetup()">CBT exam</button><button class="secondary" onclick="openFormulas()">Formula Cheat Sheet</button></nav><section id="home"><div class="card"><h2 id="greeting">Welcome, learner!</h2><p class="muted">Choose a subject, read a lesson and practise with instant explanations.</p><span class="tag" id="summary"></span></div><div class="grid" id="subjects"></div></section><section id="subject" class="hidden"><button class="secondary" onclick="home()">← All subjects</button><div class="card"><p class="tag" id="subTag"></p><h2 id="subTitle"></h2><p class="muted">Choose a lesson to get started.</p><div id="lessonList"></div></div></section><section id="lesson" class="hidden"><button class="secondary" onclick="openSubject(activeSubject)">← Lessons</button><div class="card"><span class="tag" id="lessonTag"></span><h2 id="lessonTitle"></h2><p id="lessonText" style="line-height:1.7"></p><div class="example" id="example"></div><button onclick="startQuiz()">Start practice →</button></div></section><section id="quiz" class="hidden"><button class="secondary" onclick="openLesson(activeLesson)">← Lesson</button><div class="card"><p class="muted" id="counter"></p><div class="bar"><span id="quizBar"></span></div><h2 id="question"></h2><div id="choices"></div><p id="feedback" role="status" aria-live="polite"></p><p id="explanation"></p><button id="check" onclick="checkAnswer()">Check answer</button><button id="next" class="hidden" onclick="nextQuestion()">Next →</button></div></section><section id="result" class="hidden"><div class="card"><h2>Practice complete 🎉</h2><p id="score"></p><p class="muted">Review the explanation after every question to keep improving.</p><button onclick="startQuiz()">Try again</button><button class="secondary" onclick="openSubject(activeSubject)">More lessons</button></div></section><section id="examSetup" class="hidden"><div class="card"><h2>CBT practice examination</h2><p class="muted">Choose a subject or a mixed paper. Up to twelve questions (depending on subject), 12 minutes, one mark per question. Submit anytime; unanswered questions score zero.</p><label for="examSubject">Examination subject</label><select id="examSubject"><option value="all">Mixed: all four subjects</option><option value="0">Mathematics</option><option value="1">Further Mathematics</option><option value="2">Physics</option><option value="3">Digital Literacy</option></select><p><button onclick="beginExam()">Start timed exam →</button></p></div></section><section id="exam" class="hidden"><div class="card"><div class="examhead"><strong id="examCounter"></strong><strong id="timer" role="timer"></strong></div><div class="bar"><span id="examBar"></span></div><h2 id="examQuestion"></h2><div id="examChoices"></div><div class="examhead"><button class="secondary" onclick="examMove(-1)">← Previous</button><button class="secondary" onclick="examMove(1)">Next →</button></div><p><button onclick="submitExam(false)">Submit examination</button></p></div></section><section id="examResult" class="hidden"><div class="card"><h2>CBT result</h2><p id="examScore"></p><div id="examReview"></div><button onclick="examSetup()">Another exam</button><button class="secondary" onclick="dashboard()">My progress</button></div></section><section id="dashboard" class="hidden"><div class="card"><h2>My progress</h2><label for="learner">Learner name (optional)</label><input id="learner" maxlength="40" placeholder="Your first name" autocomplete="off"><label for="level">Class / level</label><select id="level"><option value="">Choose level (optional)</option><option>JSS1</option><option>JSS2</option><option>JSS3</option><option>SS1</option><option>SS2</option><option>SS3</option><option>Exam preparation</option></select><p><button onclick="saveName()">Save profile</button></p><div id="examHistory"></div><p class="small muted">Your name and scores stay in this browser on this device. No account or internet sync is included.</p><div id="progressList"></div><div class="card" id="premiumSection">
+</section><nav class="hidden"><button class="secondary" onclick="home()">Home</button><button class="secondary" onclick="logoutDMSStudent()">Log out</button><button class="secondary" onclick="dashboard()">My progress</button><button class="secondary" onclick="examSetup()">CBT exam</button><button class="secondary" onclick="openFormulas()">Formula Cheat Sheet</button></nav><section id="home" class="hidden"><div class="card"><h2 id="greeting">Welcome, learner!</h2><p class="muted">Choose a subject, read a lesson and practise with instant explanations.</p><span class="tag" id="summary"></span></div><div class="grid" id="subjects"></div></section><section id="subject" class="hidden"><button class="secondary" onclick="home()">← All subjects</button><div class="card"><p class="tag" id="subTag"></p><h2 id="subTitle"></h2><p class="muted">Choose a lesson to get started.</p><div id="lessonList"></div></div></section><section id="lesson" class="hidden"><button class="secondary" onclick="openSubject(activeSubject)">← Lessons</button><div class="card"><span class="tag" id="lessonTag"></span><h2 id="lessonTitle"></h2><p id="lessonText" style="line-height:1.7"></p><div class="example" id="example"></div><button onclick="startQuiz()">Start practice →</button></div></section><section id="quiz" class="hidden"><button class="secondary" onclick="openLesson(activeLesson)">← Lesson</button><div class="card"><p class="muted" id="counter"></p><div class="bar"><span id="quizBar"></span></div><h2 id="question"></h2><div id="choices"></div><p id="feedback" role="status" aria-live="polite"></p><p id="explanation"></p><button id="check" onclick="checkAnswer()">Check answer</button><button id="next" class="hidden" onclick="nextQuestion()">Next →</button></div></section><section id="result" class="hidden"><div class="card"><h2>Practice complete 🎉</h2><p id="score"></p><p class="muted">Review the explanation after every question to keep improving.</p><button onclick="startQuiz()">Try again</button><button class="secondary" onclick="openSubject(activeSubject)">More lessons</button></div></section><section id="examSetup" class="hidden"><div class="card"><h2>CBT practice examination</h2><p class="muted">Choose a subject or a mixed paper. Up to twelve questions (depending on subject), 12 minutes, one mark per question. Submit anytime; unanswered questions score zero.</p><label for="examSubject">Examination subject</label><select id="examSubject"><option value="all">Mixed: all four subjects</option><option value="0">Mathematics</option><option value="1">Further Mathematics</option><option value="2">Physics</option><option value="3">Digital Literacy</option></select><p><button onclick="beginExam()">Start timed exam →</button></p></div></section><section id="exam" class="hidden"><div class="card"><div class="examhead"><strong id="examCounter"></strong><strong id="timer" role="timer"></strong></div><div class="bar"><span id="examBar"></span></div><h2 id="examQuestion"></h2><div id="examChoices"></div><div class="examhead"><button class="secondary" onclick="examMove(-1)">← Previous</button><button class="secondary" onclick="examMove(1)">Next →</button></div><p><button onclick="submitExam(false)">Submit examination</button></p></div></section><section id="examResult" class="hidden"><div class="card"><h2>CBT result</h2><p id="examScore"></p><div id="examReview"></div><button onclick="examSetup()">Another exam</button><button class="secondary" onclick="dashboard()">My progress</button></div></section><section id="dashboard" class="hidden"><div class="card"><h2>My progress</h2><label for="learner">Learner name (optional)</label><input id="learner" maxlength="40" placeholder="Your first name" autocomplete="off"><label for="level">Class / level</label><select id="level"><option value="">Choose level (optional)</option><option>JSS1</option><option>JSS2</option><option>JSS3</option><option>SS1</option><option>SS2</option><option>SS3</option><option>Exam preparation</option></select><p><button onclick="saveName()">Save profile</button></p><div id="examHistory"></div><p class="small muted">Your progress is saved on this device and can sync to your account when Firebase sync is allowed by the database rules.</p><div id="progressList"></div><div class="card" id="premiumSection">
   <h2>⭐ Upgrade to Premium</h2>
 
   <p>Unlock the full De Maths Squadron learning experience.</p>
@@ -357,8 +357,10 @@ function store(){
 }
 
 function save(s){
-  try{localStorage.setItem('dms-v2',JSON.stringify(s))}
-  catch{}
+  try{
+    localStorage.setItem('dms-v2',JSON.stringify(s));
+    if(typeof window.dmsQueueCloudSync==='function')window.dmsQueueCloudSync(s);
+  }catch(error){console.warn('Local progress could not be saved:',error)}
 }
 
 function show(id){
@@ -637,6 +639,59 @@ const firebaseConfig = {
 const firebaseApp=initializeApp(firebaseConfig);
 const auth=getAuth(firebaseApp);
 const db=getFirestore(firebaseApp);
+let cloudSyncReady=false;
+let cloudSyncTimer=null;
+let cloudSyncBusy=false;
+
+function progressDoc(user){
+  return doc(db,'students',user.uid,'sync','progress');
+}
+
+async function syncProgressToCloud(state){
+  const user=auth.currentUser;
+  if(!user||!cloudSyncReady||cloudSyncBusy)return;
+  cloudSyncBusy=true;
+  try{
+    await setDoc(progressDoc(user),{
+      state:state||JSON.parse(localStorage.getItem('dms-v2')||'{}'),
+      updatedAt:serverTimestamp()
+    });
+  }catch(error){
+    console.warn('Cloud progress sync failed:',error);
+    const message=$('authMessage');
+    if(message && /permission-denied|unauthorized/i.test(error.code+' '+error.message)){
+      message.textContent='Your account is signed in, but Firebase progress-sync rules need updating.';
+    }
+  }finally{
+    cloudSyncBusy=false;
+  }
+}
+
+window.dmsQueueCloudSync=function(state){
+  if(!auth.currentUser||!cloudSyncReady)return;
+  clearTimeout(cloudSyncTimer);
+  cloudSyncTimer=setTimeout(()=>syncProgressToCloud(state),700);
+};
+
+async function restoreProgressFromCloud(user){
+  cloudSyncReady=false;
+  try{
+    const snap=await getDoc(progressDoc(user));
+    if(snap.exists()){
+      const cloudState=snap.data().state;
+      if(cloudState && typeof cloudState==='object' && !Array.isArray(cloudState)){
+        localStorage.setItem('dms-v2',JSON.stringify(cloudState));
+      }
+    }
+  }catch(error){
+    console.warn('Cloud progress restore failed:',error);
+    const message=$('authMessage');
+    if(message && /permission-denied|unauthorized/i.test(error.code+' '+error.message)){
+      message.textContent='Signed in, but progress sync is blocked by Firestore rules. Update the rules before testing sync.';
+    }
+  }
+  cloudSyncReady=true;
+}
 
 window.deMathsFirebase={
   auth,
@@ -774,10 +829,13 @@ onAuthStateChanged(auth,function(user){
       if(element)element.classList.toggle('hidden',id!=='home');
     });
 
-    if(typeof window.home==='function'){
-      window.home();
-    }
+    restoreProgressFromCloud(user).then(function(){
+      if(typeof window.home==='function')window.home();
+      if(typeof window.renderDashboard==='function')window.renderDashboard();
+    });
   }else{
+    cloudSyncReady=false;
+    clearTimeout(cloudSyncTimer);
     welcomeScreen.classList.remove('hidden');
     authScreen.classList.add('hidden');
     nav.classList.add('hidden');
