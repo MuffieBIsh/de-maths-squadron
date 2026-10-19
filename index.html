@@ -642,20 +642,62 @@ const db=getFirestore(firebaseApp);
 let cloudSyncReady=false;
 let cloudSyncTimer=null;
 let cloudSyncBusy=false;
+let cloudSyncPending=null;
 
 function progressDoc(user){
   return doc(db,'students',user.uid,'sync','progress');
 }
 
+function readLocalProgress(){
+  try{
+    const value=JSON.parse(localStorage.getItem('dms-v2')||'{}');
+    return value && typeof value==='object' && !Array.isArray(value) ? value : {};
+  }catch(error){
+    console.warn('Local progress could not be read:',error);
+    return {};
+  }
+}
+
+function mergeProgress(localState,cloudState){
+  const local=localState||{},cloud=cloudState||{};
+  const merged={...cloud,...local};
+  merged.name=local.name||cloud.name||'';
+  merged.level=local.level||cloud.level||'';
+  merged.scores={...(cloud.scores||{}),...(local.scores||{})};
+  Object.keys(merged.scores).forEach(function(key){
+    const a=Number((cloud.scores||{})[key]||0);
+    const b=Number((local.scores||{})[key]||0);
+    merged.scores[key]=Math.max(a,b);
+  });
+  const attempts=[...(cloud.exams||[]),...(local.exams||[])];
+  const seen=new Set();
+  merged.exams=attempts.filter(function(item){
+    const key=[item.label||'',item.score||0,item.total||0,item.date||''].join('|');
+    if(seen.has(key))return false;
+    seen.add(key);
+    return true;
+  }).slice(-20).reverse();
+  return merged;
+}
+
 async function syncProgressToCloud(state){
   const user=auth.currentUser;
-  if(!user||!cloudSyncReady||cloudSyncBusy)return;
+  if(!user||!cloudSyncReady)return;
+  if(cloudSyncBusy){
+    cloudSyncPending=state||readLocalProgress();
+    return;
+  }
   cloudSyncBusy=true;
   try{
-    await setDoc(progressDoc(user),{
-      state:state||JSON.parse(localStorage.getItem('dms-v2')||'{}'),
-      updatedAt:serverTimestamp()
-    });
+    let nextState=state||readLocalProgress();
+    do{
+      cloudSyncPending=null;
+      await setDoc(progressDoc(user),{
+        state:nextState,
+        updatedAt:serverTimestamp()
+      });
+      nextState=cloudSyncPending;
+    }while(nextState && auth.currentUser && auth.currentUser.uid===user.uid);
   }catch(error){
     console.warn('Cloud progress sync failed:',error);
     const message=$('authMessage');
@@ -664,13 +706,18 @@ async function syncProgressToCloud(state){
     }
   }finally{
     cloudSyncBusy=false;
+    if(cloudSyncPending && auth.currentUser && cloudSyncReady){
+      const pending=cloudSyncPending;
+      cloudSyncPending=null;
+      syncProgressToCloud(pending);
+    }
   }
 }
 
 window.dmsQueueCloudSync=function(state){
   if(!auth.currentUser||!cloudSyncReady)return;
   clearTimeout(cloudSyncTimer);
-  cloudSyncTimer=setTimeout(()=>syncProgressToCloud(state),700);
+  cloudSyncTimer=setTimeout(()=>syncProgressToCloud(state||readLocalProgress()),700);
 };
 
 async function restoreProgressFromCloud(user){
@@ -680,7 +727,10 @@ async function restoreProgressFromCloud(user){
     if(snap.exists()){
       const cloudState=snap.data().state;
       if(cloudState && typeof cloudState==='object' && !Array.isArray(cloudState)){
-        localStorage.setItem('dms-v2',JSON.stringify(cloudState));
+        const localState=readLocalProgress();
+        const merged=mergeProgress(localState,cloudState);
+        localStorage.setItem('dms-v2',JSON.stringify(merged));
+        if(JSON.stringify(merged)!==JSON.stringify(cloudState))cloudSyncPending=merged;
       }
     }
   }catch(error){
@@ -691,6 +741,11 @@ async function restoreProgressFromCloud(user){
     }
   }
   cloudSyncReady=true;
+  if(cloudSyncPending){
+    const pending=cloudSyncPending;
+    cloudSyncPending=null;
+    window.dmsQueueCloudSync(pending);
+  }
 }
 
 window.deMathsFirebase={
@@ -835,6 +890,7 @@ onAuthStateChanged(auth,function(user){
     });
   }else{
     cloudSyncReady=false;
+    cloudSyncPending=null;
     clearTimeout(cloudSyncTimer);
     welcomeScreen.classList.remove('hidden');
     authScreen.classList.add('hidden');
