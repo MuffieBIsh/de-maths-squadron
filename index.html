@@ -907,11 +907,28 @@ console.log('De Maths Squadron Firebase initialized successfully.');
 </script>
 
 <script>
-function selectPremium(plan){
-  alert(
-    'You selected the '+plan+
-    ' subscription. Payment integration is coming soon!'
-  );
+function selectPremium(plan) {
+const paymentLinks = {
+monthly: "https://paystack.shop/pay/dms-monthly-premium",
+termly: "https://paystack.shop/pay/dms-termly-premium",
+yearly: "https://paystack.shop/pay/dms-yearly-premium"
+};
+
+const paymentLink = paymentLinks[plan];
+
+if (!paymentLink) {
+alert("Please select a valid Premium plan.");
+return;
+}
+
+const confirmed = confirm(
+"You selected the " + plan +
+" Premium plan. Continue to Paystack?"
+);
+
+if (confirmed) {
+window.location.href = paymentLink;
+}
 }
 </script>
 
