@@ -907,29 +907,61 @@ console.log('De Maths Squadron Firebase initialized successfully.');
 </script>
 
 <script>
-function selectPremium(plan) {
-const paymentLinks = {
-monthly: "https://paystack.shop/pay/dms-monthly-premium",
-termly: "https://paystack.shop/pay/dms-termly-premium",
-yearly: "https://paystack.shop/pay/dms-yearly-premium"
-};
+async function selectPremium(plan) {
+  const fb = window.deMathsFirebase;
 
-const paymentLink = paymentLinks[plan];
+  const validPlans = ["monthly", "termly", "yearly"];
 
-if (!paymentLink) {
-alert("Please select a valid Premium plan.");
-return;
-}
+  if (!validPlans.includes(plan)) {
+    alert("Please select a valid Premium plan.");
+    return;
+  }
 
-const confirmed = confirm(
-"You selected the " + plan +
-" Premium plan. Continue to Paystack?"
-);
+  if (!fb || !fb.auth || !fb.auth.currentUser) {
+    alert("Please log in before purchasing Premium.");
+    return;
+  }
 
-if (confirmed) {
-window.location.href = paymentLink;
-}
-}
+  try {
+    const user = fb.auth.currentUser;
+    const idToken = await user.getIdToken();
+
+    const response = await fetch(
+      "https://de-maths-squadron-payments.uwemedimoedward68.workers.dev/initialize",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          plan: plan,
+          idToken: idToken
+        })
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(
+        result.error || "Could not start payment."
+      );
+    }
+
+    if (!result.authorization_url || !result.reference) {
+      throw new Error("The payment link was not returned.");
+    }
+
+    window.location.href = result.authorization_url;
+
+  } catch (error) {
+    console.error("Premium payment error:", error);
+    alert(
+      error.message ||
+      "Unable to start payment. Please try again."
+    );
+  }
+  }
 </script>
 
 </body>
