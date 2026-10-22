@@ -907,11 +907,58 @@ console.log('De Maths Squadron Firebase initialized successfully.');
 </script>
 
 <script>
-function selectPremium(plan){
-  alert(
-    'You selected the '+plan+
-    ' subscription. Payment integration is coming soon!'
+async function selectPremium(plan) {
+const fb = window.deMathsFirebase;
+
+const validPlans = ["monthly", "termly", "yearly"];
+
+if (!validPlans.includes(plan)) {
+alert("Please select a valid Premium plan.");
+return;
+}
+
+if (!fb || !fb.auth || !fb.auth.currentUser) {
+alert("Please log in before selecting a Premium plan.");
+return;
+}
+
+const user = fb.auth.currentUser;
+
+try {
+const response = await fetch(
+"https://de-maths-squadron-payments.uwemedimoedward68.workers.dev/initialize",
+{
+method: "POST",
+headers: {
+"Content-Type": "application/json"
+},
+body: JSON.stringify({
+email: user.email,
+plan: plan,
+uid: user.uid
+})
+}
+);
+
+const result = await response.json();
+
+if (!response.ok || !result.authorization_url) {
+  throw new Error(
+    result.message || "Unable to initialize payment."
   );
+}
+
+window.location.href = result.authorization_url;
+
+} catch (error) {
+console.error("Premium payment error:", error);
+
+alert(
+  "We couldn't start your payment. Please try again. " +
+  (error.message || "")
+);
+
+}
 }
 </script>
 
